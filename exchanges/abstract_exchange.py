@@ -27,7 +27,7 @@ class AbstractExchange:
     def exception(self) -> RuntimeError:
         raise NotImplementedError
 
-    def __init__(self, session: ClientSession = ClientSession()):
+    def __init__(self, session: ClientSession):
         self.session = session
 
     async def get_market_data(self, pair: CurrencyPair) -> MarketData:
@@ -35,15 +35,9 @@ class AbstractExchange:
 
     async def get(self, method: str, params: dict) -> ClientResponse:
         url = f'{self.base_url}{method}'
-        try:
-            result = await self.session.get(url, params=params)
-            result.raise_for_status()
-            return result
-        except:
-            logging.exception(
-                f'Error while retrieving data from {self.__class__.__name__}. '
-                f'URL {url}, params {params}'
-            )
+        result = await self.session.get(url, params=params)
+        result.raise_for_status()
+        return result
 
     async def json(self, response: ClientResponse, verify: Callable[..., bool]) -> dict:
         result = await response.json(loads=self.loads)

@@ -19,17 +19,14 @@ class Bittrex(AbstractExchange):
             '/getticker',
             {'market': f'{pair.currency}-{pair.base_currency}'}
         )
-        try:
-            result = await self.json(response, lambda x: x.get('success'))
-            md = MarketData(
-                source=self.__class__.__name__,
-                pair=pair,
-                best_bid=result['result']['Bid'],
-                best_ask=result['result']['Ask'],
-                last_trade=result['result']['Last'],
-                vwap=None
-            )
-            logging.debug(md)
-            return md
-        except self.exception as e:
-            logging.error(e)
+        result = await self.json(response, lambda x: x.get('success'))
+        md = MarketData(
+            source=self.__class__.__name__,
+            pair=pair,
+            best_bid=result['result']['Bid'],
+            best_ask=result['result']['Ask'],
+            last_trade=result['result']['Last'],
+            vwap=None
+        )
+        logging.debug(md)
+        return md

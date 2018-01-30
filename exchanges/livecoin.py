@@ -19,16 +19,13 @@ class Livecoin(AbstractExchange):
             '/exchange/ticker',
             {'currencyPair': f'{pair.currency}/{pair.base_currency}'}
         )
-        try:
-            result = await self.json(response, lambda x: x.get('best_bid'))
-            return MarketData(
-                source=self.__class__.__name__,
-                pair=pair,
-                best_bid=result['best_bid'],
-                best_ask=result['best_ask'],
-                last_trade=result['last'],
-                vwap=result['vwap']
-            )
-        except self.exception as e:
-            logging.error(e)
+        result = await self.json(response, lambda x: x.get('best_bid'))
+        return MarketData(
+            source=self.__class__.__name__,
+            pair=pair,
+            best_bid=result['best_bid'],
+            best_ask=result['best_ask'],
+            last_trade=result['last'],
+            vwap=result['vwap']
+        )
 
