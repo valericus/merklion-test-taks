@@ -11,9 +11,9 @@ import aiohttp
 
 from common.currency_pair import CurrencyPair
 from common.market_data import MarketData
-from exchanges import Livecoin, Bittrex
+from exchanges import Livecoin, Bittrex, Poloniex
 
-exchange_classes = [Livecoin, Bittrex]
+exchange_classes = [Livecoin, Bittrex, Poloniex]
 
 btc_ltc = CurrencyPair('BTC', 'LTC')
 ltc_eth = CurrencyPair('LTC', 'ETH')
@@ -53,5 +53,5 @@ loop = asyncio.get_event_loop()
 result = loop.run_until_complete(main(loop, (btc_ltc, ltc_eth, eth_btc)))
 
 report('Minimal bid for BTC/LTC pair is {} ({})', result[btc_ltc], min, lambda x: x.best_bid)
-#report('Minimal bid for LTC/ETH pair is {} ({})', result[ltc_eth], min, lambda x: x.best_bid)
+report('Minimal bid for LTC/ETH pair is {} ({})', result[ltc_eth], min, lambda x: x.best_bid)
 report('Maximal ask for ETH/BTC pair is {} ({})', result[eth_btc], max, lambda x: x.best_ask)

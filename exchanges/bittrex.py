@@ -1,5 +1,3 @@
-import logging
-
 from common.currency_pair import CurrencyPair
 from common.market_data import MarketData
 from exchanges.abstract_exchange import AbstractExchange, AbstractExchangeError
@@ -15,18 +13,17 @@ class Bittrex(AbstractExchange):
     exception = BittrexError
 
     async def get_market_data(self, pair: CurrencyPair) -> MarketData:
-        response = await self.get(
-            '/getticker',
-            {'market': f'{pair.currency}-{pair.base_currency}'}
+        result = await self.json(
+            await self.get(
+                '/getticker',
+                {'market': f'{pair.currency}-{pair.base_currency}'}
+            ),
+            lambda x: x.get('success')
         )
-        result = await self.json(response, lambda x: x.get('success'))
-        md = MarketData(
-            source=self.__class__.__name__,
+
+        return self.get_md(
             pair=pair,
             best_bid=result['result']['Bid'],
             best_ask=result['result']['Ask'],
-            last_trade=result['result']['Last'],
-            vwap=None
+            last_trade=result['result']['Last']
         )
-        logging.debug(md)
-        return md
