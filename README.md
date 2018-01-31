@@ -1,5 +1,5 @@
 The script pulls four crypto-currency exchanges (Livecoin, Bittrex, Bitfinex, Poloniex)
-in asynchronous ways and reports best prices for following pairs:
+in asynchronous way and reports some info about following pairs:
 
 * minimal bid for LTC/BTC,
 * minimal bid for LTC/ETH,
