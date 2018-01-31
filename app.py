@@ -10,8 +10,6 @@ from common.currency_pair import CurrencyPair
 from common.market_data import MarketData
 from exchanges import Livecoin, Bittrex, Poloniex, Bitfinex
 
-logging.basicConfig(level=logging.CRITICAL)
-
 exchange_classes = [Livecoin, Bittrex, Poloniex, Bitfinex]
 
 ltc_btc = CurrencyPair('LTC', 'BTC')
