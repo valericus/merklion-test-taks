@@ -1,7 +1,7 @@
 import json
 import logging
 from decimal import Decimal, InvalidOperation
-from typing import Callable
+from typing import Callable, Type
 
 from aiohttp import ClientSession, ClientResponse
 
@@ -35,7 +35,7 @@ class AbstractExchange:
         raise NotImplementedError
 
     @property
-    def exception(self) -> RuntimeError:
+    def exception(self) -> Type[RuntimeError]:
         raise NotImplementedError
 
     def __init__(self, session: ClientSession):

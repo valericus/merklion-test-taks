@@ -1,17 +1,16 @@
 #!/usr/bin/env python3.6
 
-import logging
-
-logging.basicConfig(level=logging.CRITICAL)
-
 import asyncio
-from typing import Callable, Iterable, Sequence
+import logging
+from typing import Callable, Sequence
 
 import aiohttp
 
 from common.currency_pair import CurrencyPair
 from common.market_data import MarketData
 from exchanges import Livecoin, Bittrex, Poloniex, Bitfinex
+
+logging.basicConfig(level=logging.CRITICAL)
 
 exchange_classes = [Livecoin, Bittrex, Poloniex, Bitfinex]
 
