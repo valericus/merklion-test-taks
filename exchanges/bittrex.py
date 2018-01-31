@@ -16,7 +16,7 @@ class Bittrex(AbstractExchange):
         result = await self.json(
             await self.get(
                 '/getticker',
-                {'market': f'{pair.currency}-{pair.base_currency}'}
+                {'market': f'{pair.base_currency}-{pair.currency}'}
             ),
             lambda x: x.get('success')
         )
