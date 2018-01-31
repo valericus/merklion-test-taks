@@ -11,9 +11,9 @@ import aiohttp
 
 from common.currency_pair import CurrencyPair
 from common.market_data import MarketData
-from exchanges import Livecoin, Bittrex, Poloniex
+from exchanges import Livecoin, Bittrex, Poloniex, Bitfinex
 
-exchange_classes = [Livecoin, Bittrex, Poloniex]
+exchange_classes = [Livecoin, Bittrex, Poloniex, Bitfinex]
 
 btc_ltc = CurrencyPair('BTC', 'LTC')
 ltc_eth = CurrencyPair('LTC', 'ETH')

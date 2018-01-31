@@ -33,7 +33,7 @@ class AbstractExchange:
     async def get_market_data(self, pair: CurrencyPair) -> MarketData:
         raise NotImplementedError
 
-    async def get(self, method: str, params: dict) -> ClientResponse:
+    async def get(self, method: str, params=None) -> ClientResponse:
         """
         Perfor HTTP GET request and raise if result status code is over 399
 
@@ -41,6 +41,8 @@ class AbstractExchange:
         :param params: query params
         :return: server response
         """
+        if params is None:
+            params = dict()
         url = f'{self.base_url}{method}'
         result = await self.session.get(url, params=params)
         result.raise_for_status()
