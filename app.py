@@ -2,10 +2,10 @@
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.CRITICAL)
 
 import asyncio
-from typing import Callable, Iterable
+from typing import Callable, Iterable, Sequence
 
 import aiohttp
 
@@ -15,17 +15,21 @@ from exchanges import Livecoin, Bittrex, Poloniex, Bitfinex
 
 exchange_classes = [Livecoin, Bittrex, Poloniex, Bitfinex]
 
-btc_ltc = CurrencyPair('BTC', 'LTC')
+ltc_btc = CurrencyPair('LTC', 'BTC')
 ltc_eth = CurrencyPair('LTC', 'ETH')
 eth_btc = CurrencyPair('ETH', 'BTC')
 
 
-def report(message: str, md: Iterable[MarketData], fltr: Callable, key: Callable):
-    proper_md = fltr(md, key=key)
-    print(message.format(key(proper_md), proper_md.source))
+def report(result_desc: str, pair: CurrencyPair, md: Sequence[MarketData], fltr: Callable, key: Callable):
+    if md is not None:
+        proper_md = fltr(md, key=key)
+        print(f'{result_desc} for {pair.currency}/{pair.base_currency} is '
+              f'{key(proper_md)} ({proper_md.source}). {len(md)} pairs found')
+    else:
+        print(f'{result_desc} for {pair.currency}/{pair.base_currency} not found')
 
 
-async def main(loop: asyncio.AbstractEventLoop, pairs: Iterable[CurrencyPair]):
+async def main(loop: asyncio.AbstractEventLoop, pairs: Sequence[CurrencyPair]):
     async with aiohttp.ClientSession(loop=loop) as session:
         exchanges = [e(session) for e in exchange_classes]
 
@@ -50,8 +54,8 @@ async def main(loop: asyncio.AbstractEventLoop, pairs: Iterable[CurrencyPair]):
         return market_data
 
 loop = asyncio.get_event_loop()
-result = loop.run_until_complete(main(loop, (btc_ltc, ltc_eth, eth_btc)))
+result = loop.run_until_complete(main(loop, (ltc_btc, ltc_eth, eth_btc)))
 
-report('Minimal bid for BTC/LTC pair is {} ({})', result[btc_ltc], min, lambda x: x.best_bid)
-report('Minimal bid for LTC/ETH pair is {} ({})', result[ltc_eth], min, lambda x: x.best_bid)
-report('Maximal ask for ETH/BTC pair is {} ({})', result[eth_btc], max, lambda x: x.best_ask)
+report('Minimal bid', ltc_btc, result.get(ltc_btc), min, lambda x: x.best_bid)
+report('Minimal bid', ltc_eth, result.get(ltc_eth), min, lambda x: x.best_bid)
+report('Maximal ask', eth_btc, result.get(eth_btc), max, lambda x: x.best_ask)
